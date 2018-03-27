@@ -30,8 +30,14 @@ var ShoppingCart = function (_React$Component) {
 
         var _this = _possibleConstructorReturn(this, (ShoppingCart.__proto__ || Object.getPrototypeOf(ShoppingCart)).call(this, props));
 
+        _this.totalCost = _this.totalCost.bind(_this);
+        _this.icrNum = _this.icrNum.bind(_this);
+        _this.dcrNum = _this.dcrNum.bind(_this);
+
         _this.state = {
-            load: false
+            load: false,
+            list: [],
+            record: new Array(10)
         };
         return _this;
     }
@@ -48,11 +54,160 @@ var ShoppingCart = function (_React$Component) {
                     _this2.setState({ load: true });
                 }
             });
+            this.eventEmitter2 = _event2.default.addListener("Add", function (item) {
+                var list = _this2.state.list;
+                var idx = list.indexOf(item);
+                var record = _this2.state.record;
+                if (idx > -1) {
+                    if (record[idx] >= list[idx].stock) {
+                        alert("stock shortage!");
+                    } else {
+                        record[idx] += 1;
+                    }
+                } else {
+                    list.push(item);
+                    record[list.indexOf(item)] = 1;
+                }
+
+                _this2.setState({ record: record });
+                _this2.setState({ list: list });
+            });
         }
     }, {
         key: "componentWillUnmount",
         value: function componentWillUnmount() {
             _event2.default.removeListener(this.eventEmitter);
+            _event2.default.removeListener(this.eventEmitter2);
+        }
+    }, {
+        key: "totalCost",
+        value: function totalCost() {
+            var record = this.state.record;
+            var list = this.state.list;
+            var len = list.length;
+            var sum = 0;
+            for (var i = 0; i < len; i++) {
+                sum += record[i] * list[i].price;
+            }
+            return sum;
+        }
+    }, {
+        key: "icrNum",
+        value: function icrNum(e) {
+            var idx = parseInt(e.target.dataset.row, 10);
+            var record = this.state.record;
+            var list = this.state.list;
+            record[idx] += 1;
+            if (record[idx] > list[idx].stock) {
+                alert("stock shortage!");
+                return;
+            }
+            this.setState({ record: record });
+        }
+    }, {
+        key: "dcrNum",
+        value: function dcrNum(e) {
+            var idx = parseInt(e.target.dataset.row, 10);
+            var record = this.state.record;
+            var list = this.state.list;
+            if (record[idx] > 1) {
+                record[idx] -= 1;
+            } else {
+                record.splice(idx, 1);
+                list.splice(idx, 1);
+            }
+            this.setState({
+                record: record,
+                list: list
+            });
+        }
+    }, {
+        key: "renderList",
+        value: function renderList() {
+            var _this3 = this;
+
+            return _react2.default.createElement(
+                "div",
+                null,
+                _react2.default.createElement(
+                    "table",
+                    null,
+                    _react2.default.createElement(
+                        "thead",
+                        null,
+                        _react2.default.createElement(
+                            "tr",
+                            null,
+                            _react2.default.createElement(
+                                "th",
+                                null,
+                                "title"
+                            ),
+                            _react2.default.createElement(
+                                "th",
+                                null,
+                                "price"
+                            ),
+                            _react2.default.createElement(
+                                "th",
+                                null,
+                                "amount"
+                            )
+                        )
+                    ),
+                    _react2.default.createElement(
+                        "tbody",
+                        null,
+                        this.state.list.map(function (row, idx) {
+                            return _react2.default.createElement(
+                                "tr",
+                                { key: idx },
+                                _react2.default.createElement(
+                                    "td",
+                                    null,
+                                    row.title
+                                ),
+                                _react2.default.createElement(
+                                    "td",
+                                    null,
+                                    "$",
+                                    row.price
+                                ),
+                                _react2.default.createElement(
+                                    "td",
+                                    null,
+                                    _this3.state.record[idx]
+                                ),
+                                _react2.default.createElement(
+                                    "td",
+                                    null,
+                                    _react2.default.createElement(
+                                        "button",
+                                        { "data-row": idx, onClick: _this3.icrNum },
+                                        "+"
+                                    )
+                                ),
+                                _react2.default.createElement(
+                                    "td",
+                                    null,
+                                    _react2.default.createElement(
+                                        "button",
+                                        { "data-row": idx, onClick: _this3.dcrNum },
+                                        "-"
+                                    )
+                                )
+                            );
+                        }, this)
+                    )
+                ),
+                _react2.default.createElement(
+                    "p",
+                    null,
+                    "Total Cost:",
+                    "     $",
+                    this.totalCost()
+                )
+            );
         }
     }, {
         key: "render",
@@ -60,10 +215,16 @@ var ShoppingCart = function (_React$Component) {
             if (!this.state.load) {
                 return _react2.default.createElement("div", null);
             }
+            var buyList = this.renderList();
             return _react2.default.createElement(
-                "p",
-                null,
-                "Shopping!"
+                "div",
+                { className: "ShopingCart" },
+                _react2.default.createElement(
+                    "h1",
+                    null,
+                    "Shopping Cart!"
+                ),
+                buyList
             );
         }
     }]);

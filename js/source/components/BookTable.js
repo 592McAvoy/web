@@ -15,6 +15,7 @@ class BookTable extends React.Component{
         this.handleSelect = this.handleSelect.bind(this);
         this.clearSelect = this.clearSelect.bind(this);
         this.handleSort = this.handleSort.bind(this);
+        this.addItem = this.addItem.bind(this);
 
         this.state = {
             load:true,
@@ -175,6 +176,15 @@ class BookTable extends React.Component{
             sortIdx:idx
         });
     }
+    addItem(e){
+        var idx = parseInt(e.target.dataset.row,10);
+        var data = this.state.data;
+        var item = data[idx];
+        const cb = (item) => {
+            emitter.emit("Add",item)
+        }
+        cb(item);
+    }
     renderTable(){
         return(
             <table>
@@ -203,7 +213,7 @@ class BookTable extends React.Component{
                                     <td>{row.auther}</td>
                                     <td>{"$"}{row.price}</td>
                                     <td>{row.publish}</td>
-                                    <td><a href='#'>{row.choice}</a></td>
+                                    <td><a data-row={idx} href='#' onClick={this.addItem}>Add</a></td>
                                 </tr>
                             );
                         },this)

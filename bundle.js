@@ -802,7 +802,7 @@ var data = localStorage.getItem('data');
 if (!headers) {
   category = ['Poem', 'Fiction', 'Story'];
   headers = ['title', 'auther', 'price', 'publish', '        '];
-  data = [{ category: "Poem", title: "Ice Rain", auther: "Alan", price: 21, publish: 2001, choice: "Add" }, { category: "Poem", title: "Homeland", auther: "Mimi", price: 44, publish: 2011, choice: "Add" }, { category: "Fiction", title: "Cut me off", auther: "Alan", price: 92, publish: 2008, choice: "Add" }, { category: "Story", title: "Grind me down", auther: "BBan", price: 67, publish: 2000, choice: "Add" }, { category: "Poem", title: "Green", auther: "BBan", price: 17, publish: 2011, choice: "Add" }];
+  data = [{ category: "Poem", title: "Ice Rain", auther: "Alan", price: 21, publish: 2001, stock: 13 }, { category: "Poem", title: "Homeland", auther: "Mimi", price: 44, publish: 2011, stock: 6 }, { category: "Fiction", title: "Cut me off", auther: "Alan", price: 92, publish: 2008, stock: 2 }, { category: "Story", title: "Grind me down", auther: "BBan", price: 67, publish: 2000, stock: 9 }, { category: "Poem", title: "Green", auther: "BBan", price: 17, publish: 2011, stock: 4 }];
 }
 
 _reactDom2.default.render(_react2.default.createElement(
@@ -866,6 +866,7 @@ var BookTable = function (_React$Component) {
         _this.handleSelect = _this.handleSelect.bind(_this);
         _this.clearSelect = _this.clearSelect.bind(_this);
         _this.handleSort = _this.handleSort.bind(_this);
+        _this.addItem = _this.addItem.bind(_this);
 
         _this.state = {
             load: true,
@@ -1080,6 +1081,17 @@ var BookTable = function (_React$Component) {
             });
         }
     }, {
+        key: "addItem",
+        value: function addItem(e) {
+            var idx = parseInt(e.target.dataset.row, 10);
+            var data = this.state.data;
+            var item = data[idx];
+            var cb = function cb(item) {
+                _event2.default.emit("Add", item);
+            };
+            cb(item);
+        }
+    }, {
         key: "renderTable",
         value: function renderTable() {
             return _react2.default.createElement(
@@ -1141,8 +1153,8 @@ var BookTable = function (_React$Component) {
                                 null,
                                 _react2.default.createElement(
                                     "a",
-                                    { href: "#" },
-                                    row.choice
+                                    { "data-row": idx, href: "#", onClick: this.addItem },
+                                    "Add"
                                 )
                             )
                         );
@@ -1201,13 +1213,36 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var Info = function (_React$Component) {
     _inherits(Info, _React$Component);
 
-    function Info() {
+    function Info(props) {
         _classCallCheck(this, Info);
 
-        return _possibleConstructorReturn(this, (Info.__proto__ || Object.getPrototypeOf(Info)).apply(this, arguments));
+        var _this = _possibleConstructorReturn(this, (Info.__proto__ || Object.getPrototypeOf(Info)).call(this, props));
+
+        _this.state = {
+            isLog: false
+        };
+        return _this;
     }
 
     _createClass(Info, [{
+        key: "componentDidMount",
+        value: function componentDidMount() {
+            var _this2 = this;
+
+            this.eventEmitter = _event2.default.addListener("Log", function (msg) {
+                if (msg == "Log in") {
+                    _this2.setState({ isLog: true });
+                } else if (msg == "Log out") {
+                    _this2.setState({ isLog: false });
+                }
+            });
+        }
+    }, {
+        key: "componentWillUnmount",
+        value: function componentWillUnmount() {
+            _event2.default.removeListener(this.eventEmitter);
+        }
+    }, {
         key: "render",
         value: function render() {
             var cb = function cb(msg) {
@@ -1215,30 +1250,47 @@ var Info = function (_React$Component) {
                     _event2.default.emit("Page", msg);
                 };
             };
-            return _react2.default.createElement(
-                "div",
-                { className: "Info" },
-                _react2.default.createElement(
-                    "a",
-                    { href: "#", onClick: cb("Homepage") },
-                    "Homepage"
-                ),
-                _react2.default.createElement(
-                    "a",
-                    { href: "#", onClick: cb("Shopping") },
-                    "Shopping Cart"
-                ),
-                _react2.default.createElement(
-                    "a",
-                    { href: "#", onClick: cb("User") },
-                    "UserInfo"
-                ),
-                _react2.default.createElement(
-                    "a",
-                    { href: "#", onClick: cb("Log") },
-                    "Log in/out"
-                )
-            );
+            if (this.state.isLog) {
+                return _react2.default.createElement(
+                    "div",
+                    { className: "Info" },
+                    _react2.default.createElement(
+                        "a",
+                        { href: "#", onClick: cb("Homepage") },
+                        "Homepage"
+                    ),
+                    _react2.default.createElement(
+                        "a",
+                        { href: "#", onClick: cb("Shopping") },
+                        "Shopping Cart"
+                    ),
+                    _react2.default.createElement(
+                        "a",
+                        { href: "#", onClick: cb("User") },
+                        "UserInfo"
+                    ),
+                    _react2.default.createElement(
+                        "a",
+                        { href: "#", onClick: cb("Log") },
+                        "Log out"
+                    )
+                );
+            } else {
+                return _react2.default.createElement(
+                    "div",
+                    { className: "Info" },
+                    _react2.default.createElement(
+                        "a",
+                        { href: "#", onClick: cb("Homepage") },
+                        "Homepage"
+                    ),
+                    _react2.default.createElement(
+                        "a",
+                        { href: "#", onClick: cb("Log") },
+                        "Log in"
+                    )
+                );
+            }
         }
     }]);
 
@@ -1279,9 +1331,22 @@ var Log = function (_React$Component) {
 
         var _this = _possibleConstructorReturn(this, (Log.__proto__ || Object.getPrototypeOf(Log)).call(this, props));
 
+        _this.handleLog = _this.handleLog.bind(_this);
+        _this.handleLogOut = _this.handleLogOut.bind(_this);
+        _this.handleRegister = _this.handleRegister.bind(_this);
+        _this.changePassword = _this.changePassword.bind(_this);
+        _this.changeUsr = _this.changeUsr.bind(_this);
+        _this.changeEmailAddr = _this.changeEmailAddr.bind(_this);
+        _this.changePhoneNum = _this.changePhoneNum.bind(_this);
+
         _this.state = {
             load: false,
-            log: false
+            logIn: false,
+            register: false,
+            userName: "",
+            password: "",
+            phoneNum: "",
+            emailAddr: ""
         };
         return _this;
     }
@@ -1305,15 +1370,167 @@ var Log = function (_React$Component) {
             _event2.default.removeListener(this.eventEmitter);
         }
     }, {
+        key: "handleLog",
+        value: function handleLog(e) {
+            e.preventDefault();
+            this.setState({ logIn: true });
+            var cb = function cb(msg) {
+                _event2.default.emit("Log", msg);
+            };
+            cb("Log in");
+            alert("Welcome " + this.state.userName);
+            var ca = function ca(msg) {
+                _event2.default.emit("Page", msg);
+            };
+            ca("Homepage");
+        }
+    }, {
+        key: "handleRegister",
+        value: function handleRegister(e) {
+            this.setState({ register: true });
+        }
+    }, {
+        key: "handleLogOut",
+        value: function handleLogOut(e) {
+            this.setState({ logIn: false });
+            var cb = function cb(msg) {
+                _event2.default.emit("Log", msg);
+            };
+            cb("Log out");
+        }
+    }, {
+        key: "changePassword",
+        value: function changePassword(e) {
+            this.setState({ password: e.target.value });
+        }
+    }, {
+        key: "changeUsr",
+        value: function changeUsr(e) {
+            this.setState({ userName: e.target.value });
+        }
+    }, {
+        key: "changePhoneNum",
+        value: function changePhoneNum(e) {
+            this.setState({ phoneNum: e.target.value });
+        }
+    }, {
+        key: "changeEmailAddr",
+        value: function changeEmailAddr(e) {
+            this.setState({ emailAddr: e.target.value });
+        }
+    }, {
+        key: "renderLog",
+        value: function renderLog() {
+            if (this.state.logIn) {
+                return _react2.default.createElement(
+                    "div",
+                    null,
+                    _react2.default.createElement(
+                        "p",
+                        null,
+                        "Welcome",
+                        " ",
+                        this.state.userName,
+                        "!"
+                    ),
+                    _react2.default.createElement(
+                        "button",
+                        { onClick: this.handleLogOut },
+                        " Log out"
+                    )
+                );
+            }
+            if (this.state.register) {
+                return _react2.default.createElement(
+                    "div",
+                    null,
+                    _react2.default.createElement(
+                        "form",
+                        { onSubmit: this.handleLog },
+                        _react2.default.createElement(
+                            "label",
+                            null,
+                            "UserName:",
+                            _react2.default.createElement("input", { type: "text", value: this.state.userName,
+                                onChange: this.changeUsr, placeholder: "..." })
+                        ),
+                        _react2.default.createElement("br", null),
+                        _react2.default.createElement(
+                            "label",
+                            null,
+                            "Password:",
+                            _react2.default.createElement("input", { type: "text", value: this.state.password,
+                                onChange: this.changePassword, placeholder: "..." })
+                        ),
+                        _react2.default.createElement("br", null),
+                        _react2.default.createElement(
+                            "label",
+                            null,
+                            "PhoneNumber:",
+                            _react2.default.createElement("input", { type: "text", value: this.state.phoneNum,
+                                onChange: this.changePhoneNum, placeholder: "..." })
+                        ),
+                        _react2.default.createElement("br", null),
+                        _react2.default.createElement(
+                            "label",
+                            null,
+                            "EmailAddr:",
+                            _react2.default.createElement("input", { type: "text", value: this.state.emailAddr,
+                                onChange: this.changeEmailAddr, placeholder: "..." })
+                        ),
+                        _react2.default.createElement("br", null),
+                        _react2.default.createElement("input", { type: "submit", value: "Register" })
+                    )
+                );
+            }
+            return _react2.default.createElement(
+                "div",
+                null,
+                _react2.default.createElement(
+                    "p",
+                    null,
+                    "New user please",
+                    _react2.default.createElement(
+                        "button",
+                        { onClick: this.handleRegister },
+                        " click here"
+                    ),
+                    "to register"
+                ),
+                _react2.default.createElement(
+                    "form",
+                    { onSubmit: this.handleLog },
+                    _react2.default.createElement(
+                        "label",
+                        null,
+                        "UserName:",
+                        _react2.default.createElement("input", { type: "text", value: this.state.userName,
+                            onChange: this.changeUsr, placeholder: "..." })
+                    ),
+                    _react2.default.createElement("br", null),
+                    _react2.default.createElement(
+                        "label",
+                        null,
+                        "Password:",
+                        _react2.default.createElement("input", { type: "text", value: this.state.password,
+                            onChange: this.changePassword, placeholder: "..." })
+                    ),
+                    _react2.default.createElement("br", null),
+                    _react2.default.createElement("input", { type: "submit", value: "Log In" })
+                )
+            );
+        }
+    }, {
         key: "render",
         value: function render() {
             if (!this.state.load) {
                 return _react2.default.createElement("div", null);
             }
+            var log = this.renderLog();
             return _react2.default.createElement(
-                "p",
-                null,
-                "Log!"
+                "div",
+                { className: "Log" },
+                log
             );
         }
     }]);
@@ -1405,8 +1622,14 @@ var ShoppingCart = function (_React$Component) {
 
         var _this = _possibleConstructorReturn(this, (ShoppingCart.__proto__ || Object.getPrototypeOf(ShoppingCart)).call(this, props));
 
+        _this.totalCost = _this.totalCost.bind(_this);
+        _this.icrNum = _this.icrNum.bind(_this);
+        _this.dcrNum = _this.dcrNum.bind(_this);
+
         _this.state = {
-            load: false
+            load: false,
+            list: [],
+            record: new Array(10)
         };
         return _this;
     }
@@ -1423,11 +1646,160 @@ var ShoppingCart = function (_React$Component) {
                     _this2.setState({ load: true });
                 }
             });
+            this.eventEmitter2 = _event2.default.addListener("Add", function (item) {
+                var list = _this2.state.list;
+                var idx = list.indexOf(item);
+                var record = _this2.state.record;
+                if (idx > -1) {
+                    if (record[idx] >= list[idx].stock) {
+                        alert("stock shortage!");
+                    } else {
+                        record[idx] += 1;
+                    }
+                } else {
+                    list.push(item);
+                    record[list.indexOf(item)] = 1;
+                }
+
+                _this2.setState({ record: record });
+                _this2.setState({ list: list });
+            });
         }
     }, {
         key: "componentWillUnmount",
         value: function componentWillUnmount() {
             _event2.default.removeListener(this.eventEmitter);
+            _event2.default.removeListener(this.eventEmitter2);
+        }
+    }, {
+        key: "totalCost",
+        value: function totalCost() {
+            var record = this.state.record;
+            var list = this.state.list;
+            var len = list.length;
+            var sum = 0;
+            for (var i = 0; i < len; i++) {
+                sum += record[i] * list[i].price;
+            }
+            return sum;
+        }
+    }, {
+        key: "icrNum",
+        value: function icrNum(e) {
+            var idx = parseInt(e.target.dataset.row, 10);
+            var record = this.state.record;
+            var list = this.state.list;
+            record[idx] += 1;
+            if (record[idx] > list[idx].stock) {
+                alert("stock shortage!");
+                return;
+            }
+            this.setState({ record: record });
+        }
+    }, {
+        key: "dcrNum",
+        value: function dcrNum(e) {
+            var idx = parseInt(e.target.dataset.row, 10);
+            var record = this.state.record;
+            var list = this.state.list;
+            if (record[idx] > 1) {
+                record[idx] -= 1;
+            } else {
+                record.splice(idx, 1);
+                list.splice(idx, 1);
+            }
+            this.setState({
+                record: record,
+                list: list
+            });
+        }
+    }, {
+        key: "renderList",
+        value: function renderList() {
+            var _this3 = this;
+
+            return _react2.default.createElement(
+                "div",
+                null,
+                _react2.default.createElement(
+                    "table",
+                    null,
+                    _react2.default.createElement(
+                        "thead",
+                        null,
+                        _react2.default.createElement(
+                            "tr",
+                            null,
+                            _react2.default.createElement(
+                                "th",
+                                null,
+                                "title"
+                            ),
+                            _react2.default.createElement(
+                                "th",
+                                null,
+                                "price"
+                            ),
+                            _react2.default.createElement(
+                                "th",
+                                null,
+                                "amount"
+                            )
+                        )
+                    ),
+                    _react2.default.createElement(
+                        "tbody",
+                        null,
+                        this.state.list.map(function (row, idx) {
+                            return _react2.default.createElement(
+                                "tr",
+                                { key: idx },
+                                _react2.default.createElement(
+                                    "td",
+                                    null,
+                                    row.title
+                                ),
+                                _react2.default.createElement(
+                                    "td",
+                                    null,
+                                    "$",
+                                    row.price
+                                ),
+                                _react2.default.createElement(
+                                    "td",
+                                    null,
+                                    _this3.state.record[idx]
+                                ),
+                                _react2.default.createElement(
+                                    "td",
+                                    null,
+                                    _react2.default.createElement(
+                                        "button",
+                                        { "data-row": idx, onClick: _this3.icrNum },
+                                        "+"
+                                    )
+                                ),
+                                _react2.default.createElement(
+                                    "td",
+                                    null,
+                                    _react2.default.createElement(
+                                        "button",
+                                        { "data-row": idx, onClick: _this3.dcrNum },
+                                        "-"
+                                    )
+                                )
+                            );
+                        }, this)
+                    )
+                ),
+                _react2.default.createElement(
+                    "p",
+                    null,
+                    "Total Cost:",
+                    "     $",
+                    this.totalCost()
+                )
+            );
         }
     }, {
         key: "render",
@@ -1435,10 +1807,16 @@ var ShoppingCart = function (_React$Component) {
             if (!this.state.load) {
                 return _react2.default.createElement("div", null);
             }
+            var buyList = this.renderList();
             return _react2.default.createElement(
-                "p",
-                null,
-                "Shopping!"
+                "div",
+                { className: "ShopingCart" },
+                _react2.default.createElement(
+                    "h1",
+                    null,
+                    "Shopping Cart!"
+                ),
+                buyList
             );
         }
     }]);

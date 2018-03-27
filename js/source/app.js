@@ -18,11 +18,11 @@ if (!headers) {
   category = ['Poem', 'Fiction', 'Story'];
   headers = ['title','auther','price','publish','        '];
   data = [
-    {category:"Poem",title:"Ice Rain",auther:"Alan",price:21,publish:2001,choice:"Add"},
-    {category:"Poem",title:"Homeland",auther:"Mimi",price:44,publish:2011,choice:"Add"},
-    {category:"Fiction",title:"Cut me off",auther:"Alan",price:92,publish:2008,choice:"Add"},
-    {category:"Story",title:"Grind me down",auther:"BBan",price:67,publish:2000,choice:"Add"},
-    {category:"Poem",title:"Green",auther:"BBan",price:17,publish:2011,choice:"Add"}
+    {category:"Poem",title:"Ice Rain",auther:"Alan",price:21,publish:2001,stock:13},
+    {category:"Poem",title:"Homeland",auther:"Mimi",price:44,publish:2011,stock:6},
+    {category:"Fiction",title:"Cut me off",auther:"Alan",price:92,publish:2008,stock:2},
+    {category:"Story",title:"Grind me down",auther:"BBan",price:67,publish:2000,stock:9},
+    {category:"Poem",title:"Green",auther:"BBan",price:17,publish:2011,stock:4}
   ];
 }
 

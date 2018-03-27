@@ -40,6 +40,7 @@ var BookTable = function (_React$Component) {
         _this.handleSelect = _this.handleSelect.bind(_this);
         _this.clearSelect = _this.clearSelect.bind(_this);
         _this.handleSort = _this.handleSort.bind(_this);
+        _this.addItem = _this.addItem.bind(_this);
 
         _this.state = {
             load: true,
@@ -254,6 +255,17 @@ var BookTable = function (_React$Component) {
             });
         }
     }, {
+        key: "addItem",
+        value: function addItem(e) {
+            var idx = parseInt(e.target.dataset.row, 10);
+            var data = this.state.data;
+            var item = data[idx];
+            var cb = function cb(item) {
+                _event2.default.emit("Add", item);
+            };
+            cb(item);
+        }
+    }, {
         key: "renderTable",
         value: function renderTable() {
             return _react2.default.createElement(
@@ -315,8 +327,8 @@ var BookTable = function (_React$Component) {
                                 null,
                                 _react2.default.createElement(
                                     "a",
-                                    { href: "#" },
-                                    row.choice
+                                    { "data-row": idx, href: "#", onClick: this.addItem },
+                                    "Add"
                                 )
                             )
                         );

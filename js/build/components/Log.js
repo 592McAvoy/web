@@ -30,9 +30,22 @@ var Log = function (_React$Component) {
 
         var _this = _possibleConstructorReturn(this, (Log.__proto__ || Object.getPrototypeOf(Log)).call(this, props));
 
+        _this.handleLog = _this.handleLog.bind(_this);
+        _this.handleLogOut = _this.handleLogOut.bind(_this);
+        _this.handleRegister = _this.handleRegister.bind(_this);
+        _this.changePassword = _this.changePassword.bind(_this);
+        _this.changeUsr = _this.changeUsr.bind(_this);
+        _this.changeEmailAddr = _this.changeEmailAddr.bind(_this);
+        _this.changePhoneNum = _this.changePhoneNum.bind(_this);
+
         _this.state = {
             load: false,
-            log: false
+            logIn: false,
+            register: false,
+            userName: "",
+            password: "",
+            phoneNum: "",
+            emailAddr: ""
         };
         return _this;
     }
@@ -56,15 +69,167 @@ var Log = function (_React$Component) {
             _event2.default.removeListener(this.eventEmitter);
         }
     }, {
+        key: "handleLog",
+        value: function handleLog(e) {
+            e.preventDefault();
+            this.setState({ logIn: true });
+            var cb = function cb(msg) {
+                _event2.default.emit("Log", msg);
+            };
+            cb("Log in");
+            alert("Welcome " + this.state.userName);
+            var ca = function ca(msg) {
+                _event2.default.emit("Page", msg);
+            };
+            ca("Homepage");
+        }
+    }, {
+        key: "handleRegister",
+        value: function handleRegister(e) {
+            this.setState({ register: true });
+        }
+    }, {
+        key: "handleLogOut",
+        value: function handleLogOut(e) {
+            this.setState({ logIn: false });
+            var cb = function cb(msg) {
+                _event2.default.emit("Log", msg);
+            };
+            cb("Log out");
+        }
+    }, {
+        key: "changePassword",
+        value: function changePassword(e) {
+            this.setState({ password: e.target.value });
+        }
+    }, {
+        key: "changeUsr",
+        value: function changeUsr(e) {
+            this.setState({ userName: e.target.value });
+        }
+    }, {
+        key: "changePhoneNum",
+        value: function changePhoneNum(e) {
+            this.setState({ phoneNum: e.target.value });
+        }
+    }, {
+        key: "changeEmailAddr",
+        value: function changeEmailAddr(e) {
+            this.setState({ emailAddr: e.target.value });
+        }
+    }, {
+        key: "renderLog",
+        value: function renderLog() {
+            if (this.state.logIn) {
+                return _react2.default.createElement(
+                    "div",
+                    null,
+                    _react2.default.createElement(
+                        "p",
+                        null,
+                        "Welcome",
+                        " ",
+                        this.state.userName,
+                        "!"
+                    ),
+                    _react2.default.createElement(
+                        "button",
+                        { onClick: this.handleLogOut },
+                        " Log out"
+                    )
+                );
+            }
+            if (this.state.register) {
+                return _react2.default.createElement(
+                    "div",
+                    null,
+                    _react2.default.createElement(
+                        "form",
+                        { onSubmit: this.handleLog },
+                        _react2.default.createElement(
+                            "label",
+                            null,
+                            "UserName:",
+                            _react2.default.createElement("input", { type: "text", value: this.state.userName,
+                                onChange: this.changeUsr, placeholder: "..." })
+                        ),
+                        _react2.default.createElement("br", null),
+                        _react2.default.createElement(
+                            "label",
+                            null,
+                            "Password:",
+                            _react2.default.createElement("input", { type: "text", value: this.state.password,
+                                onChange: this.changePassword, placeholder: "..." })
+                        ),
+                        _react2.default.createElement("br", null),
+                        _react2.default.createElement(
+                            "label",
+                            null,
+                            "PhoneNumber:",
+                            _react2.default.createElement("input", { type: "text", value: this.state.phoneNum,
+                                onChange: this.changePhoneNum, placeholder: "..." })
+                        ),
+                        _react2.default.createElement("br", null),
+                        _react2.default.createElement(
+                            "label",
+                            null,
+                            "EmailAddr:",
+                            _react2.default.createElement("input", { type: "text", value: this.state.emailAddr,
+                                onChange: this.changeEmailAddr, placeholder: "..." })
+                        ),
+                        _react2.default.createElement("br", null),
+                        _react2.default.createElement("input", { type: "submit", value: "Register" })
+                    )
+                );
+            }
+            return _react2.default.createElement(
+                "div",
+                null,
+                _react2.default.createElement(
+                    "p",
+                    null,
+                    "New user please",
+                    _react2.default.createElement(
+                        "button",
+                        { onClick: this.handleRegister },
+                        " click here"
+                    ),
+                    "to register"
+                ),
+                _react2.default.createElement(
+                    "form",
+                    { onSubmit: this.handleLog },
+                    _react2.default.createElement(
+                        "label",
+                        null,
+                        "UserName:",
+                        _react2.default.createElement("input", { type: "text", value: this.state.userName,
+                            onChange: this.changeUsr, placeholder: "..." })
+                    ),
+                    _react2.default.createElement("br", null),
+                    _react2.default.createElement(
+                        "label",
+                        null,
+                        "Password:",
+                        _react2.default.createElement("input", { type: "text", value: this.state.password,
+                            onChange: this.changePassword, placeholder: "..." })
+                    ),
+                    _react2.default.createElement("br", null),
+                    _react2.default.createElement("input", { type: "submit", value: "Log In" })
+                )
+            );
+        }
+    }, {
         key: "render",
         value: function render() {
             if (!this.state.load) {
                 return _react2.default.createElement("div", null);
             }
+            var log = this.renderLog();
             return _react2.default.createElement(
-                "p",
-                null,
-                "Log!"
+                "div",
+                { className: "Log" },
+                log
             );
         }
     }]);

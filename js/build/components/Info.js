@@ -25,13 +25,36 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var Info = function (_React$Component) {
     _inherits(Info, _React$Component);
 
-    function Info() {
+    function Info(props) {
         _classCallCheck(this, Info);
 
-        return _possibleConstructorReturn(this, (Info.__proto__ || Object.getPrototypeOf(Info)).apply(this, arguments));
+        var _this = _possibleConstructorReturn(this, (Info.__proto__ || Object.getPrototypeOf(Info)).call(this, props));
+
+        _this.state = {
+            isLog: false
+        };
+        return _this;
     }
 
     _createClass(Info, [{
+        key: "componentDidMount",
+        value: function componentDidMount() {
+            var _this2 = this;
+
+            this.eventEmitter = _event2.default.addListener("Log", function (msg) {
+                if (msg == "Log in") {
+                    _this2.setState({ isLog: true });
+                } else if (msg == "Log out") {
+                    _this2.setState({ isLog: false });
+                }
+            });
+        }
+    }, {
+        key: "componentWillUnmount",
+        value: function componentWillUnmount() {
+            _event2.default.removeListener(this.eventEmitter);
+        }
+    }, {
         key: "render",
         value: function render() {
             var cb = function cb(msg) {
@@ -39,30 +62,47 @@ var Info = function (_React$Component) {
                     _event2.default.emit("Page", msg);
                 };
             };
-            return _react2.default.createElement(
-                "div",
-                { className: "Info" },
-                _react2.default.createElement(
-                    "a",
-                    { href: "#", onClick: cb("Homepage") },
-                    "Homepage"
-                ),
-                _react2.default.createElement(
-                    "a",
-                    { href: "#", onClick: cb("Shopping") },
-                    "Shopping Cart"
-                ),
-                _react2.default.createElement(
-                    "a",
-                    { href: "#", onClick: cb("User") },
-                    "UserInfo"
-                ),
-                _react2.default.createElement(
-                    "a",
-                    { href: "#", onClick: cb("Log") },
-                    "Log in/out"
-                )
-            );
+            if (this.state.isLog) {
+                return _react2.default.createElement(
+                    "div",
+                    { className: "Info" },
+                    _react2.default.createElement(
+                        "a",
+                        { href: "#", onClick: cb("Homepage") },
+                        "Homepage"
+                    ),
+                    _react2.default.createElement(
+                        "a",
+                        { href: "#", onClick: cb("Shopping") },
+                        "Shopping Cart"
+                    ),
+                    _react2.default.createElement(
+                        "a",
+                        { href: "#", onClick: cb("User") },
+                        "UserInfo"
+                    ),
+                    _react2.default.createElement(
+                        "a",
+                        { href: "#", onClick: cb("Log") },
+                        "Log out"
+                    )
+                );
+            } else {
+                return _react2.default.createElement(
+                    "div",
+                    { className: "Info" },
+                    _react2.default.createElement(
+                        "a",
+                        { href: "#", onClick: cb("Homepage") },
+                        "Homepage"
+                    ),
+                    _react2.default.createElement(
+                        "a",
+                        { href: "#", onClick: cb("Log") },
+                        "Log in"
+                    )
+                );
+            }
         }
     }]);
 
