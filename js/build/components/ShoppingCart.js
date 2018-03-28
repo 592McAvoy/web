@@ -185,11 +185,7 @@ var ShoppingCart = function (_React$Component) {
                                         "button",
                                         { "data-row": idx, onClick: _this3.icrNum },
                                         "+"
-                                    )
-                                ),
-                                _react2.default.createElement(
-                                    "td",
-                                    null,
+                                    ),
                                     _react2.default.createElement(
                                         "button",
                                         { "data-row": idx, onClick: _this3.dcrNum },
@@ -218,11 +214,11 @@ var ShoppingCart = function (_React$Component) {
             var buyList = this.renderList();
             return _react2.default.createElement(
                 "div",
-                { className: "ShopingCart" },
+                { className: "ShoppingCart" },
                 _react2.default.createElement(
                     "h1",
                     null,
-                    "Shopping Cart!"
+                    "Your Shopping Cart"
                 ),
                 buyList
             );

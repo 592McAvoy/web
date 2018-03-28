@@ -42,7 +42,7 @@ var Log = function (_React$Component) {
             load: false,
             logIn: false,
             register: false,
-            userName: "",
+            userName: "my friend",
             password: "",
             phoneNum: "",
             emailAddr: ""
@@ -91,7 +91,10 @@ var Log = function (_React$Component) {
     }, {
         key: "handleLogOut",
         value: function handleLogOut(e) {
-            this.setState({ logIn: false });
+            this.setState({
+                logIn: false,
+                register: false
+            });
             var cb = function cb(msg) {
                 _event2.default.emit("Log", msg);
             };
@@ -145,7 +148,7 @@ var Log = function (_React$Component) {
                     null,
                     _react2.default.createElement(
                         "form",
-                        { onSubmit: this.handleLog },
+                        { id: "f1", onSubmit: this.handleLog },
                         _react2.default.createElement(
                             "label",
                             null,

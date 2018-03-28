@@ -8,7 +8,7 @@ class BookTable extends React.Component{
         this.changeCategory = this.changeCategory.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleClear = this.handleClear.bind(this);
+        this.handleSeniorSearch = this.handleSeniorSearch.bind(this);
         this.changeSelectIdx = this.changeSelectIdx.bind(this);
         this.changeLow = this.changeLow.bind(this);
         this.changeHigh = this.changeHigh.bind(this);
@@ -23,6 +23,7 @@ class BookTable extends React.Component{
             preData:null,
             category:"Poem",
             searchIdx:"",
+            seniorSearch:false,
             selectIdx:"price",
             low:0,
             high:9999,
@@ -67,14 +68,18 @@ class BookTable extends React.Component{
         var newIdx = e.target.value;
         this.setState({searchIdx:newIdx});
     }
-    handleClear(e){
-        if(this.state.preData == null){
+    handleSeniorSearch(e){
+        /*if(this.state.preData == null){
             return;
         }
         this.setState({
             data:this.state.preData,
             searchIdx:"",
             preData:null
+        })*/
+        var s = !this.state.seniorSearch;
+        this.setState({
+            seniorSearch:s
         })
     }
     handleSubmit(e){
@@ -134,15 +139,9 @@ class BookTable extends React.Component{
             preData:null
         })
     }
-    renderSearch(){
-        return (
-            <div className="searchTool">
-                <form id='f1' onSubmit={this.handleSubmit}>
-                    <input id='i1' type="text" placeholder="..." value={this.state.searchIdx} 
-                    onChange={this.handleChange} />
-                    <input id='i2' type="submit" value="Search" />
-                    <button onClick={this.handleClear}>Clear</button>
-                </form> 
+    renderSeniorSearch(){
+        if(this.state.seniorSearch){
+            return(
                 <form id='f2' onSubmit={this.handleSelect}>
                     <select value={this.state.selectIdx} onChange={this.changeSelectIdx}>
                         <option value="price">Price</option>
@@ -153,9 +152,26 @@ class BookTable extends React.Component{
                     <label>~</label>
                     <input id='max' type="text" placeholder=".." value={this.state.high}
                     onChange={this.changeHigh}/>
-                    <input type="submit" value="Search" />
+                    <input type="submit" value="OK" />
                     <button onClick={this.clearSelect}>Clear</button>
                 </form>
+            );
+        }
+        else{
+            return <span></span>;
+        }
+    }
+    renderSearch(){
+        const senior = this.renderSeniorSearch();
+        return (
+            <div className="searchTool">
+                <form id='f1' onSubmit={this.handleSubmit}>
+                    <input id='i1' type="text" placeholder="..." value={this.state.searchIdx} 
+                    onChange={this.handleChange} />
+                    <input id='i2' type="submit" value="Search" />
+                    <button onClick={this.handleSeniorSearch}>{this.state.seniorSearch?"/\\":"\\/"}</button>
+                </form> 
+                {senior}
             </div>
                        
           );

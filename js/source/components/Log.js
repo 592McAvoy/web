@@ -55,7 +55,10 @@ class Log extends React.Component{
         this.setState({register:true});
     }
     handleLogOut(e){
-        this.setState({logIn:false});
+        this.setState({
+            logIn:false,
+            register:false
+        });
         const cb = (msg) => {
             emitter.emit("Log",msg)
         }
@@ -85,7 +88,7 @@ class Log extends React.Component{
         if(this.state.register){
             return (
                 <div>
-                <form onSubmit={this.handleLog}>
+                <form id='f1' onSubmit={this.handleLog}>
                     <label>
                         UserName:<input type="text" value={this.state.userName} 
                         onChange={this.changeUsr} placeholder="..."/>

@@ -104,8 +104,10 @@ class ShoppingCart extends React.Component{
                                     <td>{row.title}</td>
                                     <td>{"$"}{row.price}</td>
                                     <td>{this.state.record[idx]}</td>
-                                    <td><button data-row={idx} onClick={this.icrNum}>+</button></td>
-                                    <td><button data-row={idx} onClick={this.dcrNum}>-</button></td>
+                                    <td>
+                                        <button data-row={idx} onClick={this.icrNum}>+</button>
+                                        <button data-row={idx} onClick={this.dcrNum}>-</button>
+                                    </td>
                                 </tr>
                                 )
                             },this)
@@ -122,8 +124,8 @@ class ShoppingCart extends React.Component{
         }
         const buyList = this.renderList();
         return (
-            <div className="ShopingCart">
-                <h1>Shopping Cart!</h1>
+            <div className="ShoppingCart">
+                <h1>Your Shopping Cart</h1>
                 {buyList}
             </div>
         );

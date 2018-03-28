@@ -859,7 +859,7 @@ var BookTable = function (_React$Component) {
         _this.changeCategory = _this.changeCategory.bind(_this);
         _this.handleChange = _this.handleChange.bind(_this);
         _this.handleSubmit = _this.handleSubmit.bind(_this);
-        _this.handleClear = _this.handleClear.bind(_this);
+        _this.handleSeniorSearch = _this.handleSeniorSearch.bind(_this);
         _this.changeSelectIdx = _this.changeSelectIdx.bind(_this);
         _this.changeLow = _this.changeLow.bind(_this);
         _this.changeHigh = _this.changeHigh.bind(_this);
@@ -874,6 +874,7 @@ var BookTable = function (_React$Component) {
             preData: null,
             category: "Poem",
             searchIdx: "",
+            seniorSearch: false,
             selectIdx: "price",
             low: 0,
             high: 9999,
@@ -933,15 +934,19 @@ var BookTable = function (_React$Component) {
             this.setState({ searchIdx: newIdx });
         }
     }, {
-        key: "handleClear",
-        value: function handleClear(e) {
-            if (this.state.preData == null) {
+        key: "handleSeniorSearch",
+        value: function handleSeniorSearch(e) {
+            /*if(this.state.preData == null){
                 return;
             }
             this.setState({
-                data: this.state.preData,
-                searchIdx: "",
-                preData: null
+                data:this.state.preData,
+                searchIdx:"",
+                preData:null
+            })*/
+            var s = !this.state.seniorSearch;
+            this.setState({
+                seniorSearch: s
             });
         }
     }, {
@@ -1011,24 +1016,10 @@ var BookTable = function (_React$Component) {
             });
         }
     }, {
-        key: "renderSearch",
-        value: function renderSearch() {
-            return _react2.default.createElement(
-                "div",
-                { className: "searchTool" },
-                _react2.default.createElement(
-                    "form",
-                    { id: "f1", onSubmit: this.handleSubmit },
-                    _react2.default.createElement("input", { id: "i1", type: "text", placeholder: "...", value: this.state.searchIdx,
-                        onChange: this.handleChange }),
-                    _react2.default.createElement("input", { id: "i2", type: "submit", value: "Search" }),
-                    _react2.default.createElement(
-                        "button",
-                        { onClick: this.handleClear },
-                        "Clear"
-                    )
-                ),
-                _react2.default.createElement(
+        key: "renderSeniorSearch",
+        value: function renderSeniorSearch() {
+            if (this.state.seniorSearch) {
+                return _react2.default.createElement(
                     "form",
                     { id: "f2", onSubmit: this.handleSelect },
                     _react2.default.createElement(
@@ -1054,13 +1045,37 @@ var BookTable = function (_React$Component) {
                     ),
                     _react2.default.createElement("input", { id: "max", type: "text", placeholder: "..", value: this.state.high,
                         onChange: this.changeHigh }),
-                    _react2.default.createElement("input", { type: "submit", value: "Search" }),
+                    _react2.default.createElement("input", { type: "submit", value: "OK" }),
                     _react2.default.createElement(
                         "button",
                         { onClick: this.clearSelect },
                         "Clear"
                     )
-                )
+                );
+            } else {
+                return _react2.default.createElement("span", null);
+            }
+        }
+    }, {
+        key: "renderSearch",
+        value: function renderSearch() {
+            var senior = this.renderSeniorSearch();
+            return _react2.default.createElement(
+                "div",
+                { className: "searchTool" },
+                _react2.default.createElement(
+                    "form",
+                    { id: "f1", onSubmit: this.handleSubmit },
+                    _react2.default.createElement("input", { id: "i1", type: "text", placeholder: "...", value: this.state.searchIdx,
+                        onChange: this.handleChange }),
+                    _react2.default.createElement("input", { id: "i2", type: "submit", value: "Search" }),
+                    _react2.default.createElement(
+                        "button",
+                        { onClick: this.handleSeniorSearch },
+                        this.state.seniorSearch ? "/\\" : "\\/"
+                    )
+                ),
+                senior
             );
         }
     }, {
@@ -1343,7 +1358,7 @@ var Log = function (_React$Component) {
             load: false,
             logIn: false,
             register: false,
-            userName: "",
+            userName: "my friend",
             password: "",
             phoneNum: "",
             emailAddr: ""
@@ -1392,7 +1407,10 @@ var Log = function (_React$Component) {
     }, {
         key: "handleLogOut",
         value: function handleLogOut(e) {
-            this.setState({ logIn: false });
+            this.setState({
+                logIn: false,
+                register: false
+            });
             var cb = function cb(msg) {
                 _event2.default.emit("Log", msg);
             };
@@ -1446,7 +1464,7 @@ var Log = function (_React$Component) {
                     null,
                     _react2.default.createElement(
                         "form",
-                        { onSubmit: this.handleLog },
+                        { id: "f1", onSubmit: this.handleLog },
                         _react2.default.createElement(
                             "label",
                             null,
@@ -1777,11 +1795,7 @@ var ShoppingCart = function (_React$Component) {
                                         "button",
                                         { "data-row": idx, onClick: _this3.icrNum },
                                         "+"
-                                    )
-                                ),
-                                _react2.default.createElement(
-                                    "td",
-                                    null,
+                                    ),
                                     _react2.default.createElement(
                                         "button",
                                         { "data-row": idx, onClick: _this3.dcrNum },
@@ -1810,11 +1824,11 @@ var ShoppingCart = function (_React$Component) {
             var buyList = this.renderList();
             return _react2.default.createElement(
                 "div",
-                { className: "ShopingCart" },
+                { className: "ShoppingCart" },
                 _react2.default.createElement(
                     "h1",
                     null,
-                    "Shopping Cart!"
+                    "Your Shopping Cart"
                 ),
                 buyList
             );

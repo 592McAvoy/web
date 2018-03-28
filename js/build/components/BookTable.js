@@ -33,7 +33,7 @@ var BookTable = function (_React$Component) {
         _this.changeCategory = _this.changeCategory.bind(_this);
         _this.handleChange = _this.handleChange.bind(_this);
         _this.handleSubmit = _this.handleSubmit.bind(_this);
-        _this.handleClear = _this.handleClear.bind(_this);
+        _this.handleSeniorSearch = _this.handleSeniorSearch.bind(_this);
         _this.changeSelectIdx = _this.changeSelectIdx.bind(_this);
         _this.changeLow = _this.changeLow.bind(_this);
         _this.changeHigh = _this.changeHigh.bind(_this);
@@ -48,6 +48,7 @@ var BookTable = function (_React$Component) {
             preData: null,
             category: "Poem",
             searchIdx: "",
+            seniorSearch: false,
             selectIdx: "price",
             low: 0,
             high: 9999,
@@ -107,15 +108,19 @@ var BookTable = function (_React$Component) {
             this.setState({ searchIdx: newIdx });
         }
     }, {
-        key: "handleClear",
-        value: function handleClear(e) {
-            if (this.state.preData == null) {
+        key: "handleSeniorSearch",
+        value: function handleSeniorSearch(e) {
+            /*if(this.state.preData == null){
                 return;
             }
             this.setState({
-                data: this.state.preData,
-                searchIdx: "",
-                preData: null
+                data:this.state.preData,
+                searchIdx:"",
+                preData:null
+            })*/
+            var s = !this.state.seniorSearch;
+            this.setState({
+                seniorSearch: s
             });
         }
     }, {
@@ -185,24 +190,10 @@ var BookTable = function (_React$Component) {
             });
         }
     }, {
-        key: "renderSearch",
-        value: function renderSearch() {
-            return _react2.default.createElement(
-                "div",
-                { className: "searchTool" },
-                _react2.default.createElement(
-                    "form",
-                    { id: "f1", onSubmit: this.handleSubmit },
-                    _react2.default.createElement("input", { id: "i1", type: "text", placeholder: "...", value: this.state.searchIdx,
-                        onChange: this.handleChange }),
-                    _react2.default.createElement("input", { id: "i2", type: "submit", value: "Search" }),
-                    _react2.default.createElement(
-                        "button",
-                        { onClick: this.handleClear },
-                        "Clear"
-                    )
-                ),
-                _react2.default.createElement(
+        key: "renderSeniorSearch",
+        value: function renderSeniorSearch() {
+            if (this.state.seniorSearch) {
+                return _react2.default.createElement(
                     "form",
                     { id: "f2", onSubmit: this.handleSelect },
                     _react2.default.createElement(
@@ -228,13 +219,37 @@ var BookTable = function (_React$Component) {
                     ),
                     _react2.default.createElement("input", { id: "max", type: "text", placeholder: "..", value: this.state.high,
                         onChange: this.changeHigh }),
-                    _react2.default.createElement("input", { type: "submit", value: "Search" }),
+                    _react2.default.createElement("input", { type: "submit", value: "OK" }),
                     _react2.default.createElement(
                         "button",
                         { onClick: this.clearSelect },
                         "Clear"
                     )
-                )
+                );
+            } else {
+                return _react2.default.createElement("span", null);
+            }
+        }
+    }, {
+        key: "renderSearch",
+        value: function renderSearch() {
+            var senior = this.renderSeniorSearch();
+            return _react2.default.createElement(
+                "div",
+                { className: "searchTool" },
+                _react2.default.createElement(
+                    "form",
+                    { id: "f1", onSubmit: this.handleSubmit },
+                    _react2.default.createElement("input", { id: "i1", type: "text", placeholder: "...", value: this.state.searchIdx,
+                        onChange: this.handleChange }),
+                    _react2.default.createElement("input", { id: "i2", type: "submit", value: "Search" }),
+                    _react2.default.createElement(
+                        "button",
+                        { onClick: this.handleSeniorSearch },
+                        this.state.seniorSearch ? "/\\" : "\\/"
+                    )
+                ),
+                senior
             );
         }
     }, {
