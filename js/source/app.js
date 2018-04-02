@@ -22,7 +22,12 @@ if (!headers) {
     {category:"Poem",title:"Homeland",auther:"Mimi",price:44,publish:2011,stock:6},
     {category:"Fiction",title:"Cut me off",auther:"Alan",price:92,publish:2008,stock:2},
     {category:"Story",title:"Grind me down",auther:"BBan",price:67,publish:2000,stock:9},
-    {category:"Poem",title:"Green",auther:"BBan",price:17,publish:2011,stock:4}
+    {category:"Fiction",title:"Moon river",auther:"BBan",price:127,publish:2004,stock:5},
+    {category:"Poem",title:"Your hair",auther:"Alan",price:27,publish:2014,stock:14},
+    {category:"Poem",title:"Homeland2",auther:"Mimi",price:44,publish:2013,stock:9},
+    {category:"Fiction",title:"Shinning",auther:"Corn",price:112,publish:2003,stock:6},
+    {category:"Story",title:"Song to you",auther:"CanCan",price:45,publish:2010,stock:9},
+    {category:"Story",title:"Code code",auther:"Fanni",price:134,publish:2015,stock:3}
   ];
 }
 

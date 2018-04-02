@@ -89,7 +89,35 @@ class ShoppingCart extends React.Component{
         
     }
     generateOrder(e){
-        
+        var sum = this.totalCost();
+        if(sum <= 0){
+            return;
+        }
+        var date = new Date();        
+        var content = [];
+
+        var record = this.state.record;
+        var list = this.state.list;
+        var len = list.length;
+        for(var i=0;i<len;i++){
+            var item = Object();
+            item.title = list[i].title;
+            item.auther = list[i].auther;
+            item.price = list[i].price;
+            item.amount = record[i];
+            item.cost = list[i].price * record[i];
+            content.push(item);
+        }
+
+        var order = Object();
+        order.time = date;
+        order.totalCost = sum;
+        order.content = content;
+
+        const co = (order) => {
+            emitter.emit("Order",order)
+        }
+        co(order);
     }
     renderList(){
         return(

@@ -124,7 +124,37 @@ var ShoppingCart = function (_React$Component) {
         }
     }, {
         key: "generateOrder",
-        value: function generateOrder(e) {}
+        value: function generateOrder(e) {
+            var sum = this.totalCost();
+            if (sum <= 0) {
+                return;
+            }
+            var date = new Date();
+            var content = [];
+
+            var record = this.state.record;
+            var list = this.state.list;
+            var len = list.length;
+            for (var i = 0; i < len; i++) {
+                var item = Object();
+                item.title = list[i].title;
+                item.auther = list[i].auther;
+                item.price = list[i].price;
+                item.amount = record[i];
+                item.cost = list[i].price * record[i];
+                content.push(item);
+            }
+
+            var order = Object();
+            order.time = date;
+            order.totalCost = sum;
+            order.content = content;
+
+            var co = function co(order) {
+                _event2.default.emit("Order", order);
+            };
+            co(order);
+        }
     }, {
         key: "renderList",
         value: function renderList() {

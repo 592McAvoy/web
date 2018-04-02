@@ -8,12 +8,13 @@ class UserInfo extends React.Component{
         this.changeEdit = this.changeEdit.bind(this);
         this.changeIntro = this.changeIntro.bind(this);
         this.submitIntro = this.submitIntro.bind(this);
-
+    
         this.state={
             load:false,
             name:"",
             introduction:"",
-            edit:false
+            edit:false,
+            orderList:[]            
         }
     }
 
@@ -27,6 +28,12 @@ class UserInfo extends React.Component{
         });
         this.eventEmitter1 = emitter.addListener("User",(name)=>{
             this.setState({name:name});        
+        });
+        this.eventEmitter1 = emitter.addListener("Order",(order)=>{
+            var list = this.state.orderList;
+            list.push(order);
+            this.setState({orderList:list}); 
+            //console.log(this.state.orderList);      
         });
     }
     componentWillUnmount(){
@@ -77,17 +84,55 @@ class UserInfo extends React.Component{
     }
 
     renderOrder(){
-
+        return(
+            <table>
+                <thead>
+                    <tr>
+                        <th>No.</th><th>TotalCost</th><th>Time</th><th>Content</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {
+                        this.state.orderList.map((row,idx)=>{
+                            var date = row.time;
+                            var time = date.getFullYear()+"/"+date.getMonth()+"/"+date.getDate()+"  "+date.getHours()+":"+date.getMinutes();
+                            return(
+                                <tr key={idx}>
+                                    <td>#{idx+1}</td>
+                                    <td>${row.totalCost}</td>
+                                    <td>{time}</td>
+                                    <td>
+                                        <ul>
+                                            {
+                                                row.content.map((rr,idx)=>{
+                                                    var title = "<<"+rr.title+">>";
+                                                    var auther = rr.auther;
+                                                    var price = "$"+rr.price;
+                                                    return(
+                                                        <li key={idx}>{title+" -- By "+rr.auther+" ---- "+price+" * "+rr.amount+" = $"+rr.cost}</li>
+                                                    )
+                                                },this)
+                                            }
+                                        </ul>
+                                    </td>
+                                </tr>
+                            );
+                        },this)
+                    }
+                </tbody>
+            </table>
+        );
     }
-
+    
     render(){
         if(!this.state.load){
             return <div></div>;
         }
         const info = this.renderInfo();
+        const orderTable = this.renderOrder();
         return (
             <div className="UserInfo">
-                {info}
+                {info}{orderTable}
             </div>
         );
     }

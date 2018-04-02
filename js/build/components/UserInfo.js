@@ -38,7 +38,8 @@ var UserInfo = function (_React$Component) {
             load: false,
             name: "",
             introduction: "",
-            edit: false
+            edit: false,
+            orderList: []
         };
         return _this;
     }
@@ -57,6 +58,12 @@ var UserInfo = function (_React$Component) {
             });
             this.eventEmitter1 = _event2.default.addListener("User", function (name) {
                 _this2.setState({ name: name });
+            });
+            this.eventEmitter1 = _event2.default.addListener("Order", function (order) {
+                var list = _this2.state.orderList;
+                list.push(order);
+                _this2.setState({ orderList: list });
+                //console.log(this.state.orderList);      
             });
         }
     }, {
@@ -137,7 +144,89 @@ var UserInfo = function (_React$Component) {
         }
     }, {
         key: "renderOrder",
-        value: function renderOrder() {}
+        value: function renderOrder() {
+            var _this3 = this;
+
+            return _react2.default.createElement(
+                "table",
+                null,
+                _react2.default.createElement(
+                    "thead",
+                    null,
+                    _react2.default.createElement(
+                        "tr",
+                        null,
+                        _react2.default.createElement(
+                            "th",
+                            null,
+                            "No."
+                        ),
+                        _react2.default.createElement(
+                            "th",
+                            null,
+                            "TotalCost"
+                        ),
+                        _react2.default.createElement(
+                            "th",
+                            null,
+                            "Time"
+                        ),
+                        _react2.default.createElement(
+                            "th",
+                            null,
+                            "Content"
+                        )
+                    )
+                ),
+                _react2.default.createElement(
+                    "tbody",
+                    null,
+                    this.state.orderList.map(function (row, idx) {
+                        var date = row.time;
+                        var time = date.getFullYear() + "/" + date.getMonth() + "/" + date.getDate() + "  " + date.getHours() + ":" + date.getMinutes();
+                        return _react2.default.createElement(
+                            "tr",
+                            { key: idx },
+                            _react2.default.createElement(
+                                "td",
+                                null,
+                                "#",
+                                idx + 1
+                            ),
+                            _react2.default.createElement(
+                                "td",
+                                null,
+                                "$",
+                                row.totalCost
+                            ),
+                            _react2.default.createElement(
+                                "td",
+                                null,
+                                time
+                            ),
+                            _react2.default.createElement(
+                                "td",
+                                null,
+                                _react2.default.createElement(
+                                    "ul",
+                                    null,
+                                    row.content.map(function (rr, idx) {
+                                        var title = "<<" + rr.title + ">>";
+                                        var auther = rr.auther;
+                                        var price = "$" + rr.price;
+                                        return _react2.default.createElement(
+                                            "li",
+                                            { key: idx },
+                                            title + " -- By " + rr.auther + " ---- " + price + " * " + rr.amount + " = $" + rr.cost
+                                        );
+                                    }, _this3)
+                                )
+                            )
+                        );
+                    }, this)
+                )
+            );
+        }
     }, {
         key: "render",
         value: function render() {
@@ -145,10 +234,12 @@ var UserInfo = function (_React$Component) {
                 return _react2.default.createElement("div", null);
             }
             var info = this.renderInfo();
+            var orderTable = this.renderOrder();
             return _react2.default.createElement(
                 "div",
                 { className: "UserInfo" },
-                info
+                info,
+                orderTable
             );
         }
     }]);

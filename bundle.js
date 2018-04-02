@@ -802,7 +802,7 @@ var data = localStorage.getItem('data');
 if (!headers) {
   category = ['Poem', 'Fiction', 'Story'];
   headers = ['title', 'auther', 'price', 'publish', '        '];
-  data = [{ category: "Poem", title: "Ice Rain", auther: "Alan", price: 21, publish: 2001, stock: 13 }, { category: "Poem", title: "Homeland", auther: "Mimi", price: 44, publish: 2011, stock: 6 }, { category: "Fiction", title: "Cut me off", auther: "Alan", price: 92, publish: 2008, stock: 2 }, { category: "Story", title: "Grind me down", auther: "BBan", price: 67, publish: 2000, stock: 9 }, { category: "Poem", title: "Green", auther: "BBan", price: 17, publish: 2011, stock: 4 }];
+  data = [{ category: "Poem", title: "Ice Rain", auther: "Alan", price: 21, publish: 2001, stock: 13 }, { category: "Poem", title: "Homeland", auther: "Mimi", price: 44, publish: 2011, stock: 6 }, { category: "Fiction", title: "Cut me off", auther: "Alan", price: 92, publish: 2008, stock: 2 }, { category: "Story", title: "Grind me down", auther: "BBan", price: 67, publish: 2000, stock: 9 }, { category: "Fiction", title: "Moon river", auther: "BBan", price: 127, publish: 2004, stock: 5 }, { category: "Poem", title: "Your hair", auther: "Alan", price: 27, publish: 2014, stock: 14 }, { category: "Poem", title: "Homeland2", auther: "Mimi", price: 44, publish: 2013, stock: 9 }, { category: "Fiction", title: "Shinning", auther: "Corn", price: 112, publish: 2003, stock: 6 }, { category: "Story", title: "Song to you", auther: "CanCan", price: 45, publish: 2010, stock: 9 }, { category: "Story", title: "Code code", auther: "Fanni", price: 134, publish: 2015, stock: 3 }];
 }
 
 _reactDom2.default.render(_react2.default.createElement(
@@ -1741,7 +1741,37 @@ var ShoppingCart = function (_React$Component) {
         }
     }, {
         key: "generateOrder",
-        value: function generateOrder(e) {}
+        value: function generateOrder(e) {
+            var sum = this.totalCost();
+            if (sum <= 0) {
+                return;
+            }
+            var date = new Date();
+            var content = [];
+
+            var record = this.state.record;
+            var list = this.state.list;
+            var len = list.length;
+            for (var i = 0; i < len; i++) {
+                var item = Object();
+                item.title = list[i].title;
+                item.auther = list[i].auther;
+                item.price = list[i].price;
+                item.amount = record[i];
+                item.cost = list[i].price * record[i];
+                content.push(item);
+            }
+
+            var order = Object();
+            order.time = date;
+            order.totalCost = sum;
+            order.content = content;
+
+            var co = function co(order) {
+                _event2.default.emit("Order", order);
+            };
+            co(order);
+        }
     }, {
         key: "renderList",
         value: function renderList() {
@@ -1897,7 +1927,8 @@ var UserInfo = function (_React$Component) {
             load: false,
             name: "",
             introduction: "",
-            edit: false
+            edit: false,
+            orderList: []
         };
         return _this;
     }
@@ -1916,6 +1947,12 @@ var UserInfo = function (_React$Component) {
             });
             this.eventEmitter1 = _event2.default.addListener("User", function (name) {
                 _this2.setState({ name: name });
+            });
+            this.eventEmitter1 = _event2.default.addListener("Order", function (order) {
+                var list = _this2.state.orderList;
+                list.push(order);
+                _this2.setState({ orderList: list });
+                //console.log(this.state.orderList);      
             });
         }
     }, {
@@ -1996,7 +2033,89 @@ var UserInfo = function (_React$Component) {
         }
     }, {
         key: "renderOrder",
-        value: function renderOrder() {}
+        value: function renderOrder() {
+            var _this3 = this;
+
+            return _react2.default.createElement(
+                "table",
+                null,
+                _react2.default.createElement(
+                    "thead",
+                    null,
+                    _react2.default.createElement(
+                        "tr",
+                        null,
+                        _react2.default.createElement(
+                            "th",
+                            null,
+                            "No."
+                        ),
+                        _react2.default.createElement(
+                            "th",
+                            null,
+                            "TotalCost"
+                        ),
+                        _react2.default.createElement(
+                            "th",
+                            null,
+                            "Time"
+                        ),
+                        _react2.default.createElement(
+                            "th",
+                            null,
+                            "Content"
+                        )
+                    )
+                ),
+                _react2.default.createElement(
+                    "tbody",
+                    null,
+                    this.state.orderList.map(function (row, idx) {
+                        var date = row.time;
+                        var time = date.getFullYear() + "/" + date.getMonth() + "/" + date.getDate() + "  " + date.getHours() + ":" + date.getMinutes();
+                        return _react2.default.createElement(
+                            "tr",
+                            { key: idx },
+                            _react2.default.createElement(
+                                "td",
+                                null,
+                                "#",
+                                idx + 1
+                            ),
+                            _react2.default.createElement(
+                                "td",
+                                null,
+                                "$",
+                                row.totalCost
+                            ),
+                            _react2.default.createElement(
+                                "td",
+                                null,
+                                time
+                            ),
+                            _react2.default.createElement(
+                                "td",
+                                null,
+                                _react2.default.createElement(
+                                    "ul",
+                                    null,
+                                    row.content.map(function (rr, idx) {
+                                        var title = "<<" + rr.title + ">>";
+                                        var auther = rr.auther;
+                                        var price = "$" + rr.price;
+                                        return _react2.default.createElement(
+                                            "li",
+                                            { key: idx },
+                                            title + " -- By " + rr.auther + " ---- " + price + " * " + rr.amount + " = $" + rr.cost
+                                        );
+                                    }, _this3)
+                                )
+                            )
+                        );
+                    }, this)
+                )
+            );
+        }
     }, {
         key: "render",
         value: function render() {
@@ -2004,10 +2123,12 @@ var UserInfo = function (_React$Component) {
                 return _react2.default.createElement("div", null);
             }
             var info = this.renderInfo();
+            var orderTable = this.renderOrder();
             return _react2.default.createElement(
                 "div",
                 { className: "UserInfo" },
-                info
+                info,
+                orderTable
             );
         }
     }]);
