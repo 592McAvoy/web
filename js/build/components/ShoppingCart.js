@@ -33,6 +33,7 @@ var ShoppingCart = function (_React$Component) {
         _this.totalCost = _this.totalCost.bind(_this);
         _this.icrNum = _this.icrNum.bind(_this);
         _this.dcrNum = _this.dcrNum.bind(_this);
+        _this.generateOrder = _this.generateOrder.bind(_this);
 
         _this.state = {
             load: false,
@@ -122,6 +123,9 @@ var ShoppingCart = function (_React$Component) {
             });
         }
     }, {
+        key: "generateOrder",
+        value: function generateOrder(e) {}
+    }, {
         key: "renderList",
         value: function renderList() {
             var _this3 = this;
@@ -202,6 +206,12 @@ var ShoppingCart = function (_React$Component) {
                     "Total Cost:",
                     "     $",
                     this.totalCost()
+                ),
+                _react2.default.createElement("br", null),
+                _react2.default.createElement(
+                    "button",
+                    { id: "bb", onClick: this.generateOrder },
+                    "->Gengerate Order"
                 )
             );
         }

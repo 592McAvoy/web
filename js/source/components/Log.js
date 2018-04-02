@@ -40,16 +40,22 @@ class Log extends React.Component{
     handleLog(e){
         e.preventDefault();
         this.setState({logIn:true});
+
         const cb = (msg) => {
             emitter.emit("Log",msg)
         }
         cb("Log in");
         alert("Welcome "+this.state.userName);
+
         const ca = (msg) => {
             emitter.emit("Page",msg)
         }
         ca("Homepage");
 
+        const cn = (msg) => {
+            emitter.emit("User",msg)
+        }
+        cn(this.state.userName);
     }
     handleRegister(e){
         this.setState({register:true});

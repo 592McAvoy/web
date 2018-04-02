@@ -8,11 +8,12 @@ class ShoppingCart extends React.Component{
         this.totalCost = this.totalCost.bind(this);
         this.icrNum = this.icrNum.bind(this);
         this.dcrNum = this.dcrNum.bind(this);
+        this.generateOrder = this.generateOrder.bind(this);
 
         this.state={
             load:false,
             list:[],
-            record:new Array(10)
+            record:new Array(10),
         }
     }
 
@@ -87,6 +88,9 @@ class ShoppingCart extends React.Component{
         })
         
     }
+    generateOrder(e){
+        
+    }
     renderList(){
         return(
             <div>
@@ -115,6 +119,8 @@ class ShoppingCart extends React.Component{
                     </tbody>
                 </table>
                 <p>Total Cost:{"     $"}{this.totalCost()}</p>
+                <br/>
+                <button id="bb" onClick={this.generateOrder}>->Gengerate Order</button>
             </div>
         )
     }

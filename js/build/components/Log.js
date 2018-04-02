@@ -73,15 +73,22 @@ var Log = function (_React$Component) {
         value: function handleLog(e) {
             e.preventDefault();
             this.setState({ logIn: true });
+
             var cb = function cb(msg) {
                 _event2.default.emit("Log", msg);
             };
             cb("Log in");
             alert("Welcome " + this.state.userName);
+
             var ca = function ca(msg) {
                 _event2.default.emit("Page", msg);
             };
             ca("Homepage");
+
+            var cn = function cn(msg) {
+                _event2.default.emit("User", msg);
+            };
+            cn(this.state.userName);
         }
     }, {
         key: "handleRegister",

@@ -30,8 +30,15 @@ var UserInfo = function (_React$Component) {
 
         var _this = _possibleConstructorReturn(this, (UserInfo.__proto__ || Object.getPrototypeOf(UserInfo)).call(this, props));
 
+        _this.changeEdit = _this.changeEdit.bind(_this);
+        _this.changeIntro = _this.changeIntro.bind(_this);
+        _this.submitIntro = _this.submitIntro.bind(_this);
+
         _this.state = {
-            load: false
+            load: false,
+            name: "",
+            introduction: "",
+            edit: false
         };
         return _this;
     }
@@ -48,22 +55,100 @@ var UserInfo = function (_React$Component) {
                     _this2.setState({ load: true });
                 }
             });
+            this.eventEmitter1 = _event2.default.addListener("User", function (name) {
+                _this2.setState({ name: name });
+            });
         }
     }, {
         key: "componentWillUnmount",
         value: function componentWillUnmount() {
             _event2.default.removeListener(this.eventEmitter);
+            _event2.default.removeListener(this.eventEmitter1);
         }
+    }, {
+        key: "changeIntro",
+        value: function changeIntro(e) {
+            this.setState({ introduction: e.target.value });
+        }
+    }, {
+        key: "submitIntro",
+        value: function submitIntro(e) {
+            e.preventDefault();
+            this.setState({ edit: false });
+        }
+    }, {
+        key: "renderIntro",
+        value: function renderIntro() {
+            if (this.state.edit) {
+                return _react2.default.createElement(
+                    "form",
+                    { onSubmit: this.submitIntro },
+                    _react2.default.createElement(
+                        "label",
+                        null,
+                        "Introduction:",
+                        '        ',
+                        _react2.default.createElement("input", { type: "text", value: this.state.introduction,
+                            onChange: this.changeIntro })
+                    )
+                );
+            } else {
+                return _react2.default.createElement(
+                    "p",
+                    null,
+                    "Introduction:",
+                    '        ',
+                    this.state.introduction
+                );
+            }
+        }
+    }, {
+        key: "changeEdit",
+        value: function changeEdit(e) {
+            var edit = this.state.edit;
+            this.setState({ edit: !edit });
+        }
+    }, {
+        key: "renderInfo",
+        value: function renderInfo() {
+            var intro = this.renderIntro();
+            return _react2.default.createElement(
+                "div",
+                { className: "usrInfo" },
+                _react2.default.createElement(
+                    "h1",
+                    null,
+                    "Personal Homepage"
+                ),
+                _react2.default.createElement("div", { id: "icon" }),
+                _react2.default.createElement(
+                    "p",
+                    null,
+                    "UserName:",
+                    '      ',
+                    this.state.name
+                ),
+                _react2.default.createElement(
+                    "div",
+                    { onDoubleClick: this.changeEdit },
+                    intro
+                )
+            );
+        }
+    }, {
+        key: "renderOrder",
+        value: function renderOrder() {}
     }, {
         key: "render",
         value: function render() {
             if (!this.state.load) {
                 return _react2.default.createElement("div", null);
             }
+            var info = this.renderInfo();
             return _react2.default.createElement(
-                "p",
-                null,
-                "User!"
+                "div",
+                { className: "UserInfo" },
+                info
             );
         }
     }]);
