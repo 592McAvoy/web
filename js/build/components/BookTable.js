@@ -53,7 +53,8 @@ var BookTable = function (_React$Component) {
             low: 0,
             high: 9999,
             sortIdx: null,
-            descending: false
+            descending: false,
+            isLog: false
         };
         return _this;
     }
@@ -70,11 +71,19 @@ var BookTable = function (_React$Component) {
                     _this2.setState({ load: true });
                 }
             });
+            this.eventEmitter1 = _event2.default.addListener("Log", function (msg) {
+                if (msg == "Log in") {
+                    _this2.setState({ isLog: true });
+                } else if (msg == "Log out") {
+                    _this2.setState({ isLog: false });
+                }
+            });
         }
     }, {
         key: "componentWillUnmount",
         value: function componentWillUnmount() {
             _event2.default.removeListener(this.eventEmitter);
+            _event2.default.removeListener(this.eventEmitter1);
         }
     }, {
         key: "changeCategory",
@@ -110,14 +119,6 @@ var BookTable = function (_React$Component) {
     }, {
         key: "handleSeniorSearch",
         value: function handleSeniorSearch(e) {
-            /*if(this.state.preData == null){
-                return;
-            }
-            this.setState({
-                data:this.state.preData,
-                searchIdx:"",
-                preData:null
-            })*/
             var s = !this.state.seniorSearch;
             this.setState({
                 seniorSearch: s
@@ -159,7 +160,7 @@ var BookTable = function (_React$Component) {
             if (this.state.preData == null) {
                 this.state.preData = this.state.data;
             }
-            var oldData = this.state.preData;
+            var oldData = this.state.data;
             var selectData = null;
             var idx = this.state.selectIdx;
             var low = Number(this.state.low);
@@ -272,6 +273,13 @@ var BookTable = function (_React$Component) {
     }, {
         key: "addItem",
         value: function addItem(e) {
+            if (!this.state.isLog) {
+                alert("Please log in first!");
+                var _cb = function _cb(msg) {
+                    _event2.default.emit("Page", msg);
+                };
+                _cb("Log");
+            }
             var idx = parseInt(e.target.dataset.row, 10);
             var data = this.state.data;
             var item = data[idx];

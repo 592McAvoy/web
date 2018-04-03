@@ -28,7 +28,8 @@ class BookTable extends React.Component{
             low:0,
             high:9999,
             sortIdx:null,
-            descending:false
+            descending:false,
+            isLog:false
         };
     }
 
@@ -40,9 +41,17 @@ class BookTable extends React.Component{
                 this.setState({load:true});  
             }         
         });
+        this.eventEmitter1 = emitter.addListener("Log",(msg)=>{
+            if(msg == "Log in"){
+                this.setState({isLog:true})
+            } else if(msg == "Log out"){
+                this.setState({isLog:false});  
+            }         
+        });
     }
     componentWillUnmount(){
         emitter.removeListener(this.eventEmitter);
+        emitter.removeListener(this.eventEmitter1);
     }
     
     changeCategory(e){
@@ -69,14 +78,6 @@ class BookTable extends React.Component{
         this.setState({searchIdx:newIdx});
     }
     handleSeniorSearch(e){
-        /*if(this.state.preData == null){
-            return;
-        }
-        this.setState({
-            data:this.state.preData,
-            searchIdx:"",
-            preData:null
-        })*/
         var s = !this.state.seniorSearch;
         this.setState({
             seniorSearch:s
@@ -110,7 +111,7 @@ class BookTable extends React.Component{
         if(this.state.preData == null){
             this.state.preData = this.state.data;
         }
-        var oldData = this.state.preData;
+        var oldData = this.state.data;
         var selectData = null;
         var idx = this.state.selectIdx;
         var low = Number(this.state.low);
@@ -193,6 +194,13 @@ class BookTable extends React.Component{
         });
     }
     addItem(e){
+        if(!this.state.isLog){
+            alert("Please log in first!"); 
+            const cb = (msg) => {
+                    emitter.emit("Page",msg)
+            }
+            cb("Log");                       
+        }
         var idx = parseInt(e.target.dataset.row,10);
         var data = this.state.data;
         var item = data[idx];

@@ -15,7 +15,7 @@ var headers = localStorage.getItem('headers');
 var data = localStorage.getItem('data');
 
 if (!headers) {
-  category = ['Poem', 'Fiction', 'Story'];
+  category = ['Poem', 'Fiction', 'Story','Textbook'];
   headers = ['title','auther','price','publish','        '];
   data = [
     {category:"Poem",title:"Ice Rain",auther:"Alan",price:21,publish:2001,stock:13},
@@ -27,6 +27,9 @@ if (!headers) {
     {category:"Poem",title:"Homeland2",auther:"Mimi",price:44,publish:2013,stock:9},
     {category:"Fiction",title:"Shinning",auther:"Corn",price:112,publish:2003,stock:6},
     {category:"Story",title:"Song to you",auther:"CanCan",price:45,publish:2010,stock:9},
+    {category:"Textbook",title:"CSSAPP",auther:"Yuanzhang",price:227,publish:2014,stock:5},
+    {category:"Textbook",title:"Database System",auther:"JBoss",price:149,publish:2017,stock:14},
+    {category:"Poem",title:"Kitty",auther:"ling",price:84,publish:2013,stock:2},
     {category:"Story",title:"Code code",auther:"Fanni",price:134,publish:2015,stock:3}
   ];
 }
